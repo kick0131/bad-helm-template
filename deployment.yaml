@@ -1,17 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hello-helm-work.fullname" . }}
+  name: bad-template-sample
   namespace: {{ .Values.mynamespace }}
   labels:
     {{- include "hello-helm-work.labels" . | nindent 4 }}
     drink: {{ .Values.favorite.drink | quote }}
-#    food: {{ .Values.favorite.food | quote }}
     station: {{ .Values.favorite.station | quote }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "hello-helm-work.selectorLabels" . | nindent 6 }}
@@ -31,7 +28,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "nginx:latest"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
